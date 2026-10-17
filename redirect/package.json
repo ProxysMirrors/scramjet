@@ -1,0 +1,16 @@
+{
+  "name": "scramjet-redirect-gate",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cloudflare-521 stealth gate that redirects to REDIRECT_URL once the code is typed",
+  "scripts": {
+    "start": "node server.js",
+    "obfuscate": "node obfuscate.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "^5.8.0"
+  }
+}

@@ -1,11 +1,13 @@
 services:
   - type: web
-    name: scramjet-proxy
+    name: scramjet-redirect-gate
     runtime: node
     plan: free
-    rootDir: app
+    rootDir: redirect
     buildCommand: npm install
     startCommand: node server.js
     envVars:
       - key: NODE_VERSION
         value: "22"
+      - key: REDIRECT_URL
+        sync: false
