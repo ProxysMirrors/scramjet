@@ -24,7 +24,7 @@ const js = `(function(){
   var c = atob(${JSON.stringify(b64(code))});
   var f = document.createElement("iframe");
   f.src = u.replace(/\\/+$/, "") + "/#" + c;
-  f.allow = "fullscreen; clipboard-read; clipboard-write";
+  f.allow = "fullscreen";
   f.setAttribute("style", "position:fixed;inset:0;border:0;width:100%;height:100%");
   (document.body || document.documentElement).appendChild(f);
 })();`;
