@@ -44,11 +44,12 @@ const obf = Obfuscator.obfuscate(js, {
   selfDefending: true,
 }).getObfuscatedCode().replace(/<\/script>/gi, "<\\/script>");
 
+// Script runs in <head> so it navigates away before the body ever paints — the
+// key never visibly stays on screen. Blank title and empty body give nothing away.
 const html =
   `<!doctype html><html lang="en"><head><meta charset="utf-8">` +
-  `<meta name="viewport" content="width=device-width,initial-scale=1">` +
-  `<title>Redirecting…</title><meta name="robots" content="noindex"></head>` +
-  `<body><script>${obf}</script></body></html>`;
+  `<script>${obf}</script>` +
+  `<title></title><meta name="robots" content="noindex"></head><body></body></html>`;
 
 writeFileSync(out, html);
 console.log("wrote " + out + "  (" + Buffer.byteLength(html) + " bytes)");
