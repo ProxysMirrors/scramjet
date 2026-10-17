@@ -112,5 +112,18 @@ async function reveal() {
   if (g) { history.replaceState(null, "", location.pathname); a.value = g; frame.go(g); }
 }
 
+// Auto-unlock when opened with the code in the URL hash (e.g. from a key file).
+// The hash is never sent to the server, so this leaves no server-side trace of
+// the code; it's stripped from the address bar the moment the proxy opens.
+(async () => {
+  try {
+    const h = decodeURIComponent((location.hash || "").slice(1));
+    if (h.length === L && (await digest(h)) === H) {
+      history.replaceState(null, "", location.pathname + location.search);
+      reveal();
+    }
+  } catch {}
+})();
+
 // Resume within the same browser session (reloads and the ?goto bounce).
 try { if (sessionStorage.getItem("__cf_rl") === "1") reveal(); } catch {}
