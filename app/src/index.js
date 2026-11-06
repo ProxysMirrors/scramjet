@@ -176,7 +176,12 @@ async function reveal() {
   document.getElementById("vn").addEventListener("submit", (e) => {
     e.preventDefault();
     let u = a.value.trim(); if (!u) return;
-    if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+    if (!/^https?:\/\//i.test(u)) {
+      // Has a space, or no dotted domain -> search; otherwise treat as a URL.
+      u = (/\s/.test(u) || !/^[^\s]+\.[^\s]{2,}/.test(u))
+        ? "https://duckduckgo.com/?q=" + encodeURIComponent(u)
+        : "https://" + u;
+    }
     const c = cur(); if (c) c.frame.go(u);
   });
 

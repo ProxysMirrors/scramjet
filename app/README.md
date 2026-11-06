@@ -44,6 +44,41 @@ The server reads Render's `PORT`; HTTPS is automatic on `*.onrender.com`.
 Because `vendor/` is committed, Render needs no build step beyond `npm install`
 and never touches the Rust toolchain.
 
+## Run on your own laptop, public via a tunnel (Cloudflare)
+
+Host the proxy on your machine instead of Render, exposed through a reverse
+tunnel. No port forwarding, your home IP stays hidden, and the public URL is
+fronted by Cloudflare — so the fake Cloudflare **521** page is genuinely served
+through Cloudflare. The tradeoff: the link is live only while your laptop is on
+and both processes are running.
+
+```bash
+# one-time: install cloudflared (NOT the out-of-date snap)
+#   https://github.com/cloudflare/cloudflared/releases  (download .deb/.rpm, or
+#   use the Cloudflare apt/yum repo). Verify: cloudflared --version
+
+# terminal 1 — the proxy
+npm start                     # http://localhost:3030  (PORT to override)
+
+# terminal 2 — the public tunnel (same PORT)
+npm run tunnel                # prints https://<random>.trycloudflare.com
+```
+
+Copy the printed `https://<random>.trycloudflare.com` URL and regenerate the key
+against it (the URL changes every run — quick tunnels are ephemeral, no SLA):
+
+```bash
+node make-key.mjs https://<random>.trycloudflare.com <code> ../KEYS.html
+```
+
+For a **stable** URL, use a named tunnel + your own domain (free Cloudflare
+account) instead of the quick tunnel — then the key URL never changes.
+
+- Quick tunnels: free, no account, random URL, dies with the process, no uptime
+  guarantee. Fails if a `config.yaml` exists in `~/.cloudflared/`.
+- Avoid **ngrok** free tier here — it shows a browser interstitial warning page
+  that breaks the stealth illusion.
+
 ## Access gate (stealth + obfuscated)
 
 The served page is a **single HTML document** that looks exactly like a
